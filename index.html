@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5C 會議室預約</title>
+<style>
+  :root {
+    --ink: #1c2b2d;
+    --paper: #f6f4ef;
+    --card: #ffffff;
+    --line: #d8d3c4;
+    --teal: #2f6f63;
+    --teal-deep: #1f4a42;
+    --amber: #c97a3d;
+    --muted: #6b6f6a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  header {
+    margin-bottom: 22px;
+  }
+
+  .room-tag {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--teal-deep);
+    border: 1px solid var(--teal);
+    border-radius: 999px;
+    padding: 3px 12px;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 26px;
+    line-height: 1.3;
+    margin: 0 0 6px;
+    font-weight: 700;
+  }
+
+  .sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .clock-strip {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .clock-strip span.now {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin: 28px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .calendar-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .calendar-card iframe {
+    width: 100%;
+    height: 480px;
+    border: none;
+    display: block;
+  }
+
+  .calendar-fallback {
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .actions {
+    display: grid;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .action-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 16px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .action-card:active {
+    transform: scale(0.99);
+  }
+
+  .action-card.primary {
+    border-color: var(--teal);
+    background: linear-gradient(135deg, #ffffff 0%, #eef5f1 100%);
+  }
+
+  .action-card.secondary:hover,
+  .action-card.primary:hover {
+    border-color: var(--teal-deep);
+  }
+
+  .icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+
+  .icon.book { background: var(--teal); color: #fff; }
+  .icon.edit { background: #fff; color: var(--amber); border: 1.5px solid var(--amber); }
+
+  .action-text .title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+
+  .action-text .desc {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .arrow {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 18px;
+  }
+
+  .note {
+    margin-top: 28px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--teal);
+    background: #eef5f1;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--teal-deep);
+  }
+
+  footer {
+    margin-top: 36px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .config-hint {
+    margin-top: 18px;
+    font-size: 12px;
+    color: #b35c2e;
+    background: #fbeee3;
+    border: 1px dashed #d99458;
+    border-radius: 8px;
+    padding: 10px 12px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="room-tag">5C 會議室</span>
+      <h1>5C 會議室時段查詢與預約</h1>
+      <p class="sub">統一以本行事曆為準，所有單位（中風中心、護理站、ADRC、各科會議）皆共用此時間表</p>
+    </header>
+
+    <div class="section-label">目前排程</div>
+    <div class="calendar-card">
+      <!--
+        設定方式：
+        1. 用 5cneuroward@gmail.com 登入 Google Calendar
+        2. 該行事曆設定 -> 整合與嵌入這個日曆 -> 複製嵌入 iframe 的網址（src 後面那一串）
+        3. 貼到下方 iframe 的 src=" " 中間
+      -->
+      <iframe
+        src="https://calendar.google.com/calendar/embed?src=5cneuroward%40gmail.com&ctz=Asia%2FTaipei"
+        title="5C會議室即時行程">
+      </iframe>
+    </div>
+
+    <div class="section-label">我要</div>
+    <div class="actions">
+      <a class="action-card primary" href="https://docs.google.com/forms/d/e/1FAIpQLSfgQWUy7qTboFTBiGCOr_936lnz1ZUkvjeqKsaIvjlewJxNUQ/viewform?usp=publish-editor" target="_blank" rel="noopener">
+        <div class="icon book">＋</div>
+        <div class="action-text">
+          <div class="title">新增預約</div>
+          <div class="desc">填寫單位、用途與時段，系統自動檢查衝突</div>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+      <a class="action-card secondary" href="https://docs.google.com/forms/d/e/1FAIpQLSeVHxSWf49mpWWk61w2RO08P8FwbJPv5TDeLUELQPw24GYv1g/viewform?usp=publish-editor" target="_blank" rel="noopener">
+        <div class="icon edit">✎</div>
+        <div class="action-text">
+          <div class="title">修改 / 取消我的預約</div>
+          <div class="desc">輸入預約單位與姓名即可查找原預約</div>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+    </div>
+
+    <div class="note">
+      送出預約或修改後，系統會自動檢查時段是否衝突，結果會寄到您填寫的 Email，請留意收件匣（含垃圾信件夾）。
+    </div>
+
+
+    <footer>5C 病房 · 會議室預約系統</footer>
+  </div>
+</body>
+</html>
